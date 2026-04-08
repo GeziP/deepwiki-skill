@@ -2,94 +2,78 @@
 
 # DeepWiki Technical Documentation Generator
 
-A Claude Code Skill for generating technical design documentation, emphasizing architecture visualization, API completeness, and runnable code examples.
+A Claude Code skill for generating technical design documentation with ASCII diagrams, API references, and runnable code examples. Supports both English and Chinese.
 
-## Features
-
-- **ASCII Diagram Visualization** - Architecture, state machines, flow diagrams - no UML tools needed
-- **12-Chapter Standard Structure** - Complete template from overview to test coverage
-- **Runnable Code Examples** - Complete examples with necessary import/include statements
-- **API Reference Tables** - Function signatures, parameters, return values at a glance
-- **Test Coverage Tracking** - Automatic test case extraction
-
-## Installation
-
-### Claude Code
+## Quick Start
 
 ```bash
+# Install to Claude Code skills directory
 git clone https://github.com/GeziP/deepwiki-skill.git ~/.claude/skills/deepwiki-skill
 ```
 
-### Cursor / Other AI IDEs
-
-Clone the project to the corresponding skills directory.
+That's it. No additional setup required.
 
 ## Usage
 
-In Claude Code:
-
 ```
 > deepwiki src/scheduler/Task.h
-> generate deepwiki doc for Task
-> create technical design document for Module class
+> 给 Task 生成 deepwiki 文档
+> generate doc for Module class
 ```
 
-Output file: `doc/tech-docs/<ModuleName>_Design.md`
+The skill automatically detects your language:
+- Chinese conversation → uses `template.md` (Chinese template)
+- English conversation → uses `template.en.md` (English template)
+
+Output: `doc/tech-docs/<ModuleName>_Design.md`
+
+## File Structure
+
+```
+deepwiki-skill/
+├── SKILL.md          # Main skill file (bilingual triggers)
+├── template.md       # Chinese template (default)
+├── template.en.md    # English template
+├── examples/
+│   └── Task_Design.md    # Complete example (Chinese)
+└── README.md         # This file
+```
+
+## Features
+
+- **ASCII Diagrams** - Architecture, state machines, flow charts - no UML tools needed
+- **12-Chapter Structure** - Complete template from overview to test coverage
+- **Runnable Examples** - Complete code with necessary imports
+- **API Reference Tables** - Signatures, parameters, return values
+- **Bilingual Support** - Automatic language detection
+
+## Templates
+
+| File | Language | Usage |
+|------|----------|-------|
+| `template.md` | 中文 | Default for Chinese users |
+| `template.en.md` | English | For English users |
 
 ## Document Structure
 
 | Chapter | Content |
 |---------|---------|
 | 1. Overview | Background, problem, solution + architecture diagram |
-| 2. Design Goals | Functional goals, non-functional goals |
-| 3. Architecture | Module relationships, responsibility division |
+| 2. Design Goals | Functional & non-functional goals |
+| 3. Architecture | Module relationships, responsibilities |
 | 4. Core Concepts | Data structures, enums, constants |
-| 5. State Machine | State definitions, transition diagram (optional) |
-| 6. Flow Diagram | Core workflow (optional) |
+| 5. State Machine | State definitions, transitions (optional) |
+| 6. Flow Diagram | Core workflows (optional) |
 | 7. Implementation | Key code snippets |
 | 8. API Reference | Public interface table |
 | 9. Usage Guide | Runnable examples |
-| 10. FAQ | FAQ, pitfalls (optional) |
+| 10. FAQ | Common questions (optional) |
 | 11. Test Coverage | Test case table |
-| Appendix | File list, dependencies |
+| Appendix | File list, dependencies, history |
 
 ## Example
 
-See [examples/Task_Design.md](examples/Task_Design.md) for a complete output format example.
-
-## ASCII Diagram Styles
-
-### Architecture Diagram
-
-```
-┌─────────────┐     ┌─────────────┐
-│  ComponentA │────▶│  ComponentB │
-└─────────────┘     └─────────────┘
-```
-
-### State Machine
-
-```
-┌─────────────┐     ┌─────────────┐
-│   Initial   │────▶│   Running   │
-└─────────────┘     └─────────────┘
-```
-
-### Flow Diagram
-
-```
-┌─────────┐
-│  Start  │
-└────┬────┘
-     ▼
-┌─────────┐
-│ Process │
-└─────────┘
-```
-
-## Template
-
-See [template.md](template.md) for the complete chapter structure and placeholder descriptions.
+See [examples/Task_Design.md](examples/Task_Design.md) for a complete output example.
 
 ## License
 

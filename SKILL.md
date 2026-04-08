@@ -1,128 +1,112 @@
 ---
 name: deepwiki
-description: Use when creating technical design documentation for a code module/class, or when user explicitly requests "deepwiki" documentation. Generates comprehensive docs with architecture diagrams, API reference, usage examples, and test coverage in DeepWiki style.
+description: 用于生成代码模块/类的技术设计文档。生成包含架构图、API 参考、使用示例和测试覆盖的完整文档，支持中英文。
 ---
 
-TRIGGER when: user says "generate deepwiki doc", "deepwiki <file>", "technical design document", "create documentation for X"
+TRIGGER when: 
+  - 用户说 "生成 deepwiki 文档", "deepwiki <file>", "技术设计文档", "给 X 写文档", "为这个模块生成文档"
+  - 用户说 "generate deepwiki doc", "deepwiki <file>", "technical design document", "create documentation for X"
 DO NOT TRIGGER when: user asks about general documentation concepts without requesting generation
 
-# DeepWiki Technical Documentation Generator
+# DeepWiki 技术文档生成器 / Technical Documentation Generator
 
-## Overview
+## Overview / 概述
 
-**DeepWiki is a technical documentation format specification emphasizing architecture visualization, API completeness, and runnable code examples.**
+**DeepWiki is a technical documentation format emphasizing architecture visualization, API completeness, and runnable code examples.**
 
-Core principles:
-- One document per module
-- ASCII diagrams instead of UML (lightweight, maintainable)
-- API reference tables (signature + description)
-- Runnable code examples
-- Test coverage tracking
-- State machine and flow diagram visualization
+**DeepWiki 是一种技术文档格式，强调架构可视化、API 完整性和代码示例可运行性。**
 
-**Output path**: `doc/tech-docs/<ModuleName>_Design.md`
+Core principles / 核心原则：
+- One document per module / 每个模块一份独立文档
+- ASCII diagrams instead of UML / ASCII 图表代替 UML
+- API reference tables / API 参考表
+- Runnable code examples / 可运行代码示例
+- Test coverage tracking / 测试覆盖追踪
+
+**Output path / 输出路径**: `doc/tech-docs/<ModuleName>_Design.md`
 
 ---
 
-## Generation Process (Four Phases)
+## Language Selection / 语言选择
 
-You MUST complete each phase before proceeding to the next.
+When generating documentation, detect user's language preference:
+生成文档时，检测用户语言偏好：
 
-### Phase 1: Source Analysis
+- If user speaks Chinese → use `template.md` (中文模板)
+- If user speaks English → use `template.en.md` (英文模板)
+- User can explicitly specify: "用英文模板" / "use English template"
 
-**BEFORE generating ANY content:**
+---
 
-1. **Read Target File**
-   - Parse class/struct definitions
-   - Extract public APIs (methods, functions)
-   - Identify internal implementation details
-   - Find state variables and enums
-   - Document dependencies (imports, includes)
+## Generation Process / 四阶段流程
 
-2. **Identify Module Type**
-   - Stateful module (has lifecycle states) → needs state machine diagram
-   - Process module (has workflows) → needs flow diagram
-   - Data module (structs, enums) → focus on data structures
-   - Utility module (helpers) → focus on API reference
+Complete each phase before proceeding / 必须完成每个阶段才能进入下一阶段。
 
-3. **Check Related Files**
-   - Test files: `tests/<module>_test.cpp`, `test_<module>.py`
-   - Config files: `<module>_config.h`, `<module>.yaml`
-   - Related modules: imports/dependencies
+### Phase 1: Source Analysis / 源码分析
 
-### Phase 2: Context Gathering
+**Before generating any content / 生成任何内容之前:**
 
-**Collect supporting information:**
+1. **Read Target File / 读取目标文件**
+   - Parse class/struct definitions / 解析类/结构体定义
+   - Extract public APIs / 提取公开 API
+   - Identify implementation details / 识别实现细节
+   - Find state variables and enums / 查找状态变量和枚举
+   - Document dependencies / 记录依赖关系
 
-1. **Find Existing Docs**
+2. **Identify Module Type / 识别模块类型**
+   - Stateful module → needs state machine diagram / 有状态模块 → 需状态机图
+   - Process module → needs flow diagram / 流程模块 → 需流程图
+   - Data module → focus on data structures / 数据模块 → 侧重数据结构
+   - Utility module → focus on API reference / 工具模块 → 侧重 API 参考
+
+3. **Check Related Files / 检查相关文件**
+   - Test files: `tests/<module>_test.*` / 测试文件
+   - Config files / 配置文件
+   - Related modules / 相关模块
+
+### Phase 2: Context Gathering / 上下文收集
+
+1. **Find Existing Docs / 查找现有文档**
    - Check `doc/tech-docs/` for related documents
-   - Note version history, related modules
-   - Extract cross-reference links
 
-2. **Extract Test Coverage**
+2. **Extract Test Coverage / 提取测试覆盖**
    - List test case names from test file
-   - Identify covered functionality
-   - Note missing test areas
 
-3. **Check Git History**
+3. **Check Git History / 检查 Git 历史**
    ```bash
    git log --oneline --follow <file> | head -10
    ```
-   - Recent changes
-   - Author information
-   - Change rationale
 
-### Phase 3: Document Generation
+### Phase 3: Document Generation / 文档生成
 
-**Use template.md structure (12 chapters):**
+**Use template structure (12 chapters) / 使用模板结构（12 章节）:**
 
-| Chapter | Content | Required |
-|---------|---------|----------|
-| Document Info | Version, date, audience, related docs, source files | ✓ |
-| 1. Overview | Background, problem, solution (with ASCII architecture diagram) | ✓ |
-| 2. Design Goals | Functional goals, non-functional goals | ✓ |
-| 3. Architecture | Module relationship diagram, responsibility table | ✓ |
-| 4. Core Concepts | Data structures, enum definitions, constant definitions | ✓ |
-| 5. State Machine | State definitions, transition diagram, transition conditions | ○ |
-| 6. Flow Diagram | Core flow diagram, step descriptions, exception handling | ○ |
-| 7. Implementation | Key code snippets (with comments) | ✓ |
-| 8. API Reference | Public interface table (signature, description) | ✓ |
-| 9. Usage Guide | Complete runnable code examples | ✓ |
-| 10. FAQ | FAQ, pitfalls, best practices | ○ |
-| 11. Test Coverage | Test case table, coverage scope | ✓ |
-| Appendix | File list, dependencies, change history | ○ |
+| Chapter / 章节 | Required / 必须 |
+|----------------|-----------------|
+| 1. Overview / 概述 | ✓ |
+| 2. Design Goals / 设计目标 | ✓ |
+| 3. Architecture / 架构设计 | ✓ |
+| 4. Core Concepts / 核心概念 | ✓ |
+| 5. State Machine / 状态机 | ○ (if applicable) |
+| 6. Flow Diagram / 流程图 | ○ (if applicable) |
+| 7. Implementation / 实现细节 | ✓ |
+| 8. API Reference / API 参考 | ✓ |
+| 9. Usage Guide / 使用指南 | ✓ |
+| 10. FAQ / 常见问题 | ○ |
+| 11. Test Coverage / 测试覆盖 | ✓ |
+| Appendix / 附录 | ○ |
 
-(✓ = Required, ○ = Optional - based on module type)
+### Phase 4: Quality Verification / 质量验证
 
-### Phase 4: Quality Verification
-
-**Before outputting final document:**
-
-1. **Check ASCII Diagrams**
-   - All boxes properly closed
-   - Arrows point in correct direction
-   - Labels readable
-
-2. **Verify Code Examples**
-   - Examples are complete (not fragments)
-   - Comments explain WHY, not just WHAT
-   - Include import/include statements
-
-3. **Cross-Reference Links**
-   - Link to related docs using `[Module_Design.md]`
-   - Link to source files using relative paths
-   - Link to test files
-
-4. **Final Review**
-   - Document follows template.md structure
-   - All required chapters present
-   - Tables formatted correctly
+1. ASCII diagrams properly formatted / ASCII 图表格式正确
+2. Code examples runnable / 代码示例可运行
+3. Cross-reference links present / 交叉引用链接存在
 
 ---
 
-## ASCII Diagram Styles
+## ASCII Diagram Styles / ASCII 图表风格
 
-### Architecture Diagram
+### Architecture Diagram / 架构图
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -132,21 +116,11 @@ You MUST complete each phase before proceeding to the next.
 │  ┌─────────────┐     ┌─────────────┐                       │
 │  │  ComponentA │────▶│  ComponentB │                       │
 │  └─────────────┘     └─────────────┘                       │
-│         │                   │                               │
-│         ▼                   ▼                               │
-│  ┌─────────────┐     ┌─────────────┐                       │
-│  │  ComponentC │     │  ComponentD │                       │
-│  └─────────────┘     └─────────────┘                       │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Elements**:
-- `────▶` data flow/call direction
-- `│` `▼` hierarchy relationship
-- `┌─┐` `└─┘` borders
-
-### State Machine Diagram
+### State Machine / 状态机
 
 ```
                     ┌─────────────┐
@@ -154,13 +128,10 @@ You MUST complete each phase before proceeding to the next.
                     └─────────────┘
                           │
                     start()
-                          │
                           ▼
 ┌─────────────┐     ┌─────────────┐
 │   Failed    │◀────│   Running   │
-└─────────────┘ fail└─────────────┘
-                          │
-                    succeed
+└─────────────┘     └─────────────┘
                           │
                           ▼
                    ┌─────────────┐
@@ -168,19 +139,9 @@ You MUST complete each phase before proceeding to the next.
                    └─────────────┘
 ```
 
-**Elements**:
-- `───▶` state transition direction
-- `◀───` reverse transition
-- Transition conditions labeled beside arrows
-
-### Flow Diagram
+### Flow Diagram / 流程图
 
 ```
-┌─────────┐
-│  Start  │
-└────┬────┘
-     │
-     ▼
 ┌─────────┐     ┌─────────┐
 │ Step 1  │────▶│ Step 2  │
 └─────────┘     └────┬────┘
@@ -189,97 +150,76 @@ You MUST complete each phase before proceeding to the next.
                 ▼         ▼
            ┌─────────┐ ┌─────────┐
            │  Yes    │ │   No    │
-           └────┬────┘ └────┬────┘
-                │           │
-                └─────┬─────┘
-                      ▼
-               ┌─────────┐
-               │   End   │
-               └─────────┘
+           └─────────┘ └─────────┘
 ```
-
-**Elements**:
-- `┌───┐` rectangle boxes for steps
-- `◀───▶` branch/merge
-- `Yes/No` condition branch labels
 
 ---
 
-## Code Example Style
+## Code Example Style / 代码示例风格
 
 ```cpp
-// ========== Basic Usage ==========
+// ========== Basic Usage / 基本使用 ==========
 
-// Create a task
+// Create a task / 创建任务
 auto task = std::make_shared<Task>(Task::Config{
     .name = "SampleTask",
     .priority = 10
 });
 
-// Execute
 task->execute();
 
-// ========== Advanced Usage ==========
+// ========== Advanced Usage / 进阶用法 ==========
 
-// With callback
+// With callback / 带回调
 task->setOnSuccess([](const TaskHookContext& ctx) {
-    std::cout << "Task " << ctx.taskName << " completed\n";
+    std::cout << "Task completed\n";
 });
 ```
 
-**Requirements**:
-- `// ========== Title ==========` section headers
-- Comments explain WHY (why doing this)
-- Examples must be runnable (include necessary imports/includes)
+**Requirements / 要求**:
+- `// ========== Title ========== ` section headers / 分节标题
+- Comments explain WHY / 注释解释原因
+- Include necessary imports/includes / 包含必要的导入
 
 ---
 
-## Template Reference
+## Templates / 模板
 
-See `template.md` for the complete chapter structure with placeholders:
+| File / 文件 | Language / 语言 |
+|-------------|-----------------|
+| `template.md` | 中文（默认） |
+| `template.en.md` | English / 英文 |
 
-| Placeholder | Description |
-|-------------|-------------|
-| `{{MODULE_NAME}}` | Module name (e.g., Task, Module) |
-| `{{FILE_PATH}}` | Source file path |
-| `{{VERSION}}` | Document version (default: V1.0) |
-| `{{DATE}}` | Current date |
-| `{{RELATED_DOCS}}` | Related document links |
-| `{{TEST_FILE}}` | Test file path |
+See templates for placeholders: `{{MODULE_NAME}}`, `{{FILE_PATH}}`, `{{VERSION}}`, `{{DATE}}`
+查看模板了解占位符：`{{MODULE_NAME}}`, `{{FILE_PATH}}`, `{{VERSION}}`, `{{DATE}}`
 
 ---
 
-## Example Output
+## Example / 示例
 
-See `examples/Task_Design.md` for a complete example document demonstrating:
-- 12 chapters properly filled
-- ASCII diagrams (architecture, state machine, flow)
-- Code examples with comments
-- API reference tables
-- Test coverage table
+See `examples/Task_Design.md` for a complete example document.
+查看 `examples/Task_Design.md` 了解完整示例文档。
 
 ---
 
-## Quick Reference
+## Quick Reference / 快速参考
 
-| Input | Output |
-|-------|--------|
-| `deepwiki src/scheduler/Task.h` | `doc/tech-docs/Task_Design.md` |
-| `create documentation for Task` | `doc/tech-docs/Task_Design.md` |
-| `technical design document for this module` | Document for identified module |
+| Input / 输入 | Output / 输出 |
+|--------------|---------------|
+| `deepwiki src/Task.h` | `doc/tech-docs/Task_Design.md` |
+| `给 Task 生成 deepwiki 文档` | `doc/tech-docs/Task_Design.md` |
+| `generate doc for Task` | `doc/tech-docs/Task_Design.md` |
 
 ---
 
-## Red Flags - STOP and Re-analyze
+## Red Flags / 注意事项
 
-If you encounter:
-- Cannot find source file → Ask user for correct path
-- Multiple classes in one file → Ask which to document, or suggest splitting
-- No test file found → Note in document, suggest creating tests
-- Complex dependency graph → Focus on direct dependencies, list indirect in appendix
+- Cannot find source → Ask user for path / 找不到源文件 → 询问路径
+- Multiple classes in one file → Ask which to document / 单文件多类 → 询问目标
+- No test file → Note in document / 无测试文件 → 文档标注
+- Complex dependencies → Focus on direct deps / 复杂依赖 → 侧重直接依赖
 
-**DO NOT:**
-- Guess module functionality without reading source
-- Create diagrams without understanding relationships
-- Copy template without filling with actual content
-- Skip required chapters even if content seems thin
+**DO NOT / 禁止**:
+- Guess without reading source / 不读源码猜测功能
+- Create diagrams without understanding / 不理解就画图
+- Skip required chapters / 跳过必须章节
