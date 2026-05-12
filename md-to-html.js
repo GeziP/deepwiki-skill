@@ -53,6 +53,17 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
+function detectCodeLang(content) {
+  if (/[┌┐└┘│├┤┬┴─╔╗╚╝║═╠╣╦╩┼]/.test(content) || /───/.test(content)) return 'text';
+  if (/\b(void|int|bool|auto|class|struct|enum|template|namespace|const|static|virtual|override|noexcept)\b/.test(content)
+      || /#include/.test(content) || /std::/.test(content) || /nullptr/.test(content)
+      || /\bEXPECT_\w+|ASSERT_\w+/.test(content) || /TEST_F|TEST\(/.test(content)) return 'cpp';
+  if (/^\s*\{[\s\S]*\}\s*$/.test(content.trim()) && /"/.test(content) && /:/.test(content)) return 'json';
+  if (/^\$ /.test(content) || /^cmake /.test(content) || /^git /.test(content)) return 'bash';
+  if (/^flowchart|^graph |^sequenceDiagram|^classDiagram|^stateDiagram/.test(content.trim())) return 'mermaid';
+  return 'text';
+}
+
 function parseMdMeta(lines) {
   const meta = {};
   let i = 0;
@@ -193,13 +204,8 @@ function mdBodyToHtml(body) {
         codeLines = [];
       } else {
         const content = codeLines.join('\n');
-        const isAsciiArt = !codeLang || codeLang === '' || /[┌└├─│▼▶◀]/.test(content);
-        if (isAsciiArt && !codeLang) {
-          out.push(`<figure class="code-block"><pre><code>${escapeHtml(content)}</code></pre></figure>`);
-        } else {
-          const lang = codeLang || '';
-          out.push(`<figure class="code-block" data-lang="${lang}"><pre><code>${escapeHtml(content)}</code></pre></figure>`);
-        }
+        const lang = codeLang || detectCodeLang(content);
+        out.push(`<figure class="code-block" data-lang="${lang}"><pre><code>${escapeHtml(content)}</code></pre></figure>`);
         inCode = false;
         codeLang = '';
       }

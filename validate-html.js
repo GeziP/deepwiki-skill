@@ -267,9 +267,11 @@ function checkCodeBlocks(html, report) {
     }
   }
 
-  const bareCodeRe = /<(?!figure)pre><code>([\s\S]*?)<\/code><\/pre>/g;
+  // Count <pre><code> NOT inside <figure> wrappers
+  const withoutFigures = html.replace(/<figure[\s\S]*?<\/figure>/g, '');
+  const bareCodeRe = /<pre><code>[\s\S]*?<\/code><\/pre>/g;
   let bareCount = 0;
-  while ((m = bareCodeRe.exec(html)) !== null) bareCount++;
+  while (bareCodeRe.exec(withoutFigures) !== null) bareCount++;
 
   if (count === 0) {
     report.pass(cat, 'No code blocks found');
@@ -372,8 +374,10 @@ function checkCollapsibleSections(html, report) {
     if (!/<summary>/.test(body)) missingSummary++;
   }
 
-  const openDetails = (html.match(/<details/g) || []).length;
-  const closeDetails = (html.match(/<\/details>/g) || []).length;
+  // Strip <style>/<script> blocks to avoid counting CSS comments containing "<details"
+  const htmlOnly = html.replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<script[\s\S]*?<\/script>/gi, '');
+  const openDetails = (htmlOnly.match(/<details/g) || []).length;
+  const closeDetails = (htmlOnly.match(/<\/details>/g) || []).length;
   const orphaned = Math.abs(openDetails - closeDetails);
 
   if (count === 0) {
