@@ -1004,18 +1004,14 @@ obj->doWork();</code></pre>
       });
     }
 
-    // --- TOC auto-generation ---
+    // --- TOC (static entries from converter) ---
     const toc = document.getElementById('toc');
-    const headings = document.querySelectorAll('h2[id], h3[id]');
-    headings.forEach(function(h) {
-      var id = h.id;
-      var li = document.createElement('li');
-      var a = document.createElement('a');
-      a.href = '#' + id;
-      a.textContent = h.textContent.trim();
-      if (h.tagName === 'H3') a.classList.add('toc-h3');
+
+    // Add click handlers to static TOC entries
+    toc.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function(e) {
         e.preventDefault();
+        var id = a.getAttribute('href').substring(1);
         var target = document.getElementById(id);
         if (target) {
           var details = target.closest('details');
@@ -1024,8 +1020,6 @@ obj->doWork();</code></pre>
         }
         closeSidebarOnMobile();
       });
-      li.appendChild(a);
-      toc.appendChild(li);
     });
 
     // --- ScrollSpy ---
@@ -1216,6 +1210,7 @@ obj->doWork();</code></pre>
       }, { passive: false });
       inner.addEventListener('touchend', function() { isDragging = false; lastDist = 0; });
     })();
+  })();
   </script>
 </body>
 </html>
