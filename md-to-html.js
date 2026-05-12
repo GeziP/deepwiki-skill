@@ -64,13 +64,14 @@ function parseMdMeta(lines) {
     if (m) {
       const key = m[1].trim();
       const val = m[2].trim();
-      if (key === '文档版本') meta.version = val;
-      else if (key === '编写日期') meta.writeDate = val;
-      else if (key === '更新日期') meta.updateDate = val;
-      else if (key === '目标读者') meta.audience = val;
-      else if (key === '关联文档') meta.relatedDocs = val;
-      else if (key === '实现文件') meta.implFile = val;
-      else if (key === '测试文件') meta.testFile = val;
+      // Chinese keys
+      if (key === '文档版本' || key === 'Version') meta.version = val;
+      else if (key === '编写日期' || key === 'Date') meta.writeDate = val;
+      else if (key === '更新日期' || key === 'Updated') meta.updateDate = val;
+      else if (key === '目标读者' || key === 'Audience') meta.audience = val;
+      else if (key === '关联文档' || key === 'Related Docs') meta.relatedDocs = val;
+      else if (key === '实现文件' || key === 'Source File') meta.implFile = val;
+      else if (key === '测试文件' || key === 'Test File') meta.testFile = val;
     }
   }
   return meta;
@@ -93,7 +94,7 @@ function parseMarkdownSections(content) {
       continue;
     }
 
-    if (/^## 文档信息/.test(line)) { inMeta = true; continue; }
+    if (/^## 文档信息|^## Document Info/i.test(line)) { inMeta = true; continue; }
     if (inMeta) {
       if (/^---/.test(line) || /^## /.test(line)) {
         inMeta = false;
@@ -104,8 +105,8 @@ function parseMarkdownSections(content) {
       continue;
     }
 
-    if (/^## 目录/.test(line)) {
-      while (i + 1 < lines.length && !(/^## /.test(lines[i + 1]) && !/^## 目录/.test(lines[i + 1]))) {
+    if (/^## 目录|^## Table of Contents/i.test(line)) {
+      while (i + 1 < lines.length && !(/^## /.test(lines[i + 1]) && !/^## 目录|^## Table of Contents/i.test(lines[i + 1]))) {
         i++;
         if (/^---/.test(lines[i + 1])) { i++; break; }
       }
@@ -143,6 +144,8 @@ function mdBodyToHtml(body) {
   let tableRows = [];
   let inList = false;
   let listItems = [];
+  let inOl = false;
+  let olItems = [];
 
   function flushList() {
     if (listItems.length) {
@@ -151,6 +154,16 @@ function mdBodyToHtml(body) {
       out.push('</ul>');
       listItems = [];
       inList = false;
+    }
+  }
+
+  function flushOl() {
+    if (olItems.length) {
+      out.push('<ol>');
+      olItems.forEach(li => out.push(`  <li>${inlineMarkdown(li)}</li>`));
+      out.push('</ol>');
+      olItems = [];
+      inOl = false;
     }
   }
 
@@ -206,7 +219,7 @@ function mdBodyToHtml(body) {
     }
 
     if (/^[-*] /.test(line)) {
-      flushTable();
+      flushOl(); flushTable();
       inList = true;
       listItems.push(line.replace(/^[-*] /, ''));
       continue;
@@ -214,15 +227,24 @@ function mdBodyToHtml(body) {
       flushList();
     }
 
+    if (/^\d+\. /.test(line)) {
+      flushList(); flushOl(); flushTable();
+      inOl = true;
+      olItems.push(line.replace(/^\d+\. /, ''));
+      continue;
+    } else if (inOl) {
+      flushOl();
+    }
+
     if (/^### /.test(line)) {
-      flushList(); flushTable();
+      flushList(); flushOl(); flushTable();
       const heading = line.replace(/^### /, '').trim();
       out.push(`<h3>${inlineMarkdown(heading)}</h3>`);
       continue;
     }
 
     if (/^#### /.test(line)) {
-      flushList(); flushTable();
+      flushList(); flushOl(); flushTable();
       const heading = line.replace(/^#### /, '').trim();
       out.push(`<h4>${inlineMarkdown(heading)}</h4>`);
       continue;
@@ -232,19 +254,28 @@ function mdBodyToHtml(body) {
       continue;
     }
 
-    flushList(); flushTable();
+    flushList(); flushOl(); flushTable();
     out.push(`<p>${inlineMarkdown(line)}</p>`);
   }
 
-  flushList();
+  flushList(); flushOl();
   flushTable();
   return out.join('\n');
 }
 
 function inlineMarkdown(text) {
-  return text
+  // First escape HTML entities in prose
+  let out = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  // Then apply inline markdown transformations
+  out = out
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>');
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  return out;
 }
 
 function sectionId(heading) {
@@ -258,13 +289,13 @@ function sectionId(heading) {
     };
     if (map[num[1]]) return map[num[1]];
   }
-  if (/附录/.test(heading)) return 'sec-appendix';
+  if (/附录|appendix/i.test(heading)) return 'sec-appendix';
   return 'sec-' + heading.replace(/[^\w]/g, '').toLowerCase().slice(0, 20);
 }
 
 function shouldBeOpen(heading) {
   if (/^(1|2|3|4|7|8|9|11)\./.test(heading)) return true;
-  if (/附录|常见问题|状态机|流程图/.test(heading)) return false;
+  if (/附录|常见问题|状态机|流程图|appendix|faq|state machine|flow diagram/i.test(heading)) return false;
   return true;
 }
 
