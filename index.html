@@ -3,125 +3,539 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="deepwiki-html">
   <title>DeepWiki Module Skill</title>
   <style>
     :root {
-      --bg: #ffffff; --bg2: #f7f9fb; --text: #1f2a30; --muted: #66737c;
-      --border: #dfe6e8; --accent: #1c8790; --accent-soft: #e9fbfa;
-      --code-bg: #f5f7f9; --shadow: 0 4px 12px rgba(0,0,0,.06);
+      --font-sans: "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      --font-mono: Consolas, "Courier New", "Fira Code", monospace;
+      --bg: #ffffff;
+      --bg-secondary: #f7f9fb;
+      --bg-tertiary: #edf2f3;
+      --text: #1f2a30;
+      --text-muted: #66737c;
+      --text-faint: #8a95a4;
+      --border: #dfe6e8;
+      --border-light: #edf2f3;
+      --accent: #1c8790;
+      --accent-hover: #15696f;
+      --accent-soft: #e9fbfa;
+      --link: #1a6fa0;
+      --link-hover: #14587e;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
+      --card-green: #edf7f0; --card-green-border: #bbf0c9;
+      --card-amber: #fbf4e5; --card-amber-border: #fde68a;
+      --card-red: #fbefee;   --card-red-border: #fecaca;
+      --card-violet: #f3f0fa; --card-violet-border: #ddd6fe;
+      --card-cyan: #e9fbfa;  --card-cyan-border: #a5f3fc;
+      --card-blue: #eef7fc;  --card-blue-border: #bfdbfe;
     }
     [data-theme="dark"] {
-      --bg: #0d1117; --bg2: #161b22; --text: #e6edf3; --muted: #8b949e;
-      --border: #30363d; --accent: #58d5c9; --accent-soft: #122b2e;
-      --code-bg: #1c2128; --shadow: 0 4px 12px rgba(0,0,0,.3);
+      --bg: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #1c2128;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-faint: #6e7681;
+      --border: #30363d;
+      --border-light: #21262d;
+      --accent: #58d5c9;
+      --accent-hover: #79e0d7;
+      --accent-soft: #122b2e;
+      --link: #58a6ff;
+      --link-hover: #79b8ff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.4);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+      --card-green: #0d2818; --card-green-border: #1a4731;
+      --card-amber: #2a1f05; --card-amber-border: #4b3a12;
+      --card-red: #2d0d0d;   --card-red-border: #5a1a1a;
+      --card-violet: #1a0d2e; --card-violet-border: #3b2066;
+      --card-cyan: #122b2e;  --card-cyan-border: #164e63;
+      --card-blue: #0d1d31;  --card-blue-border: #1f4170;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: "Microsoft YaHei","Segoe UI",system-ui,sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
-    .container { max-width: 720px; margin: 0 auto; padding: 60px 24px; }
-    h1 { font-size: 28px; margin-bottom: 8px; }
-    .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
-    h2 { font-size: 18px; margin: 32px 0 12px; color: var(--accent); }
-    p { margin: 8px 0; font-size: 14px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 12px; margin: 16px 0; }
-    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-    .card-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-    .card p { color: var(--muted); font-size: 13px; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .btn { display: inline-block; padding: 8px 20px; border-radius: 6px; font-weight: 600; font-size: 14px; margin: 4px 8px 4px 0; border: 1px solid var(--accent); color: var(--accent); transition: all .15s; }
-    .btn:hover { background: var(--accent); color: #fff; text-decoration: none; }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { opacity: .85; }
-    code { font-family: Consolas,"Courier New",monospace; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 13px; }
-    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
-    pre code { background: none; padding: 0; }
-    .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; text-align: center; }
-    .theme-btn { position: fixed; top: 16px; right: 16px; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; padding: 4px 10px; font-size: 13px; }
-    .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0d1117; --bg-secondary: #161b22; --bg-tertiary: #1c2128;
+        --text: #e6edf3; --text-muted: #8b949e; --text-faint: #6e7681;
+        --border: #30363d; --border-light: #21262d;
+        --accent: #58d5c9; --accent-hover: #79e0d7; --accent-soft: #122b2e;
+        --link: #58a6ff; --link-hover: #79b8ff;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+        --shadow-md: 0 4px 12px rgba(0,0,0,.4);
+        --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+        --card-green: #0d2818; --card-green-border: #1a4731;
+        --card-amber: #2a1f05; --card-amber-border: #4b3a12;
+        --card-red: #2d0d0d;   --card-red-border: #5a1a1a;
+        --card-violet: #1a0d2e; --card-violet-border: #3b2066;
+        --card-cyan: #122b2e;  --card-cyan-border: #164e63;
+        --card-blue: #0d1d31;  --card-blue-border: #1f4170;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      height: 48px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 24px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+    .topbar-brand { font-weight: 700; font-size: 14px; color: var(--accent); letter-spacing: .5px; }
+    .topbar-sep { color: var(--border); font-size: 14px; }
+    .topbar-title { font-size: 14px; color: var(--text-muted); }
+    .topbar-actions { margin-left: auto; display: flex; gap: 4px; }
+    .topbar-btn {
+      background: none; border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-muted); cursor: pointer; padding: 4px 10px;
+      font-size: 13px; transition: all .15s;
+    }
+    .topbar-btn:hover { background: var(--bg-tertiary); color: var(--text); }
+
+    .hero {
+      position: relative;
+      padding: 80px 24px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 30% 20%, rgba(28,135,144,.08), transparent),
+        radial-gradient(ellipse 500px 300px at 70% 60%, rgba(26,111,160,.06), transparent);
+      pointer-events: none;
+    }
+    [data-theme="dark"] .hero::before {
+      background:
+        radial-gradient(ellipse 600px 400px at 30% 20%, rgba(88,213,201,.06), transparent),
+        radial-gradient(ellipse 500px 300px at 70% 60%, rgba(88,166,255,.04), transparent);
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-stat-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      display: block;
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .features {
+      max-width: 900px;
+      margin: -20px auto 40px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .feature-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 16px;
+      text-align: center;
+      transition: all .2s;
+    }
+    .feature-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .feature-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .feature-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+    .group-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-faint);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+    .card {
+      display: block;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .card:hover::before { opacity: 1; }
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+      color: var(--text);
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .card-tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .card[data-group="template"]  { background: var(--card-cyan); }
+    .card[data-group="template"] .card-tag { background: var(--card-cyan-border); color: #0e7490; }
+    [data-theme="dark"] .card[data-group="template"] .card-tag { color: #67e8f9; }
+    .card[data-group="tool"]     { background: var(--card-blue); }
+    .card[data-group="tool"] .card-tag { background: var(--card-blue-border); color: #1d4ed8; }
+    [data-theme="dark"] .card[data-group="tool"] .card-tag { color: #93c5fd; }
+    .card[data-group="validation"] { background: var(--card-green); }
+    .card[data-group="validation"] .card-tag { background: var(--card-green-border); color: #166534; }
+    [data-theme="dark"] .card[data-group="validation"] .card-tag { color: #86efac; }
+
+    .card.hidden { display: none; }
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-faint);
+      font-size: 15px;
+      display: none;
+    }
+    .no-results.show { display: block; }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--text-faint);
+      border-top: 1px solid var(--border-light);
+    }
+    footer a { color: var(--link); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 48px 16px 36px; }
+      .hero h1 { font-size: 24px; }
+      .hero-stats { gap: 20px; }
+      .hero-stat-num { font-size: 24px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media print {
+      .topbar, .demo-section { display: none; }
+      .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+      .hero { padding: 20px 0; }
+    }
   </style>
 </head>
 <body>
-  <button class="theme-btn" onclick="toggleTheme()">Theme</button>
-  <div class="container">
-    <h1>DeepWiki Module Skill</h1>
-    <p class="subtitle">Claude Code skill for generating module-level technical design documents in DeepWiki format.</p>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">Markdown Generation</div>
-        <p>Generate structured design docs from source code with 10-chapter template.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">HTML Conversion</div>
-        <p>Convert Markdown to standalone HTML with dark/light theme, code highlighting, Mermaid diagrams.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Validation Pipeline</div>
-        <p>9-category validation with auto-fix: Mermaid, headings, code blocks, JS syntax, TOC, etc.</p>
-      </div>
+  <nav class="topbar">
+    <span class="topbar-brand">DeepWiki</span>
+    <span class="topbar-sep">/</span>
+    <span class="topbar-title">Module Skill</span>
+    <div class="topbar-actions">
+      <a class="topbar-btn" href="https://github.com/GeziP/deepwiki-module-skill" title="GitHub">Repo</a>
+      <button class="topbar-btn" onclick="toggleTheme()" title="切换主题">◐</button>
     </div>
+  </nav>
 
-    <h2>Template Previews</h2>
-    <p>Click to preview each HTML template:</p>
-    <a class="btn" href="template.html">Module Design</a>
-    <a class="btn" href="template-architecture.html">Architecture</a>
-    <a class="btn" href="template-guide.html">Guide</a>
-    <a class="btn" href="template-issue.html">Issue</a>
-    <a class="btn" href="template-report.html">Report</a>
-    <a class="btn" href="template-index.html">Index Page</a>
-
-    <h2>Quick Start</h2>
-    <p>Use as a Claude Code skill or run the converter directly:</p>
-<pre><code># Convert a single Markdown file to HTML
-node md-to-html.js doc/MyModule_Design.md
-
-# Convert all module design docs
-node md-to-html.js --all
-
-# Generate an index page
-node md-to-html.js --index "Project Name" "Description"
-
-# Validate HTML files
-node validate-html.js --all
-
-# Validate and auto-fix
-node validate-html.js --fix --all</code></pre>
-
-    <h2>Validation Categories</h2>
-    <div class="cards">
-      <div class="card"><div class="card-title">1. Mermaid Blocks</div><p>Entity escaping, arrow syntax, diamond conflicts</p></div>
-      <div class="card"><div class="card-title">2. Heading IDs</div><p>Missing/duplicate IDs, auto-fix generation</p></div>
-      <div class="card"><div class="card-title">3. Code Blocks</div><p>Language tags, unescaped characters</p></div>
-      <div class="card"><div class="card-title">4. Tables</div><p>thead/tbody structure</p></div>
-      <div class="card"><div class="card-title">5. Inline Markdown</div><p>Raw links and bold patterns</p></div>
-      <div class="card"><div class="card-title">6. Collapsible Sections</div><p>details/summary integrity</p></div>
-      <div class="card"><div class="card-title">7. TOC Completeness</div><p>Link validation, entry count</p></div>
-      <div class="card"><div class="card-title">8. HTML Skeleton</div><p>doctype, charset, viewport, lang</p></div>
-      <div class="card"><div class="card-title">9. JavaScript Syntax</div><p>Inline script syntax validation</p></div>
+  <header class="hero">
+    <h1>DeepWiki <span>Module Skill</span></h1>
+    <p>Claude Code skill for generating module-level technical design documents. Dual format output (Markdown + HTML), 12-chapter structure, 9-category validation.</p>
+    <div class="hero-stats">
+      <div><span class="hero-stat-num">7</span><span class="hero-stat-label">Templates</span></div>
+      <div><span class="hero-stat-num">12</span><span class="hero-stat-label">Chapters</span></div>
+      <div><span class="hero-stat-num">9</span><span class="hero-stat-label">Validations</span></div>
+      <div><span class="hero-stat-num">0</span><span class="hero-stat-label">Dependencies</span></div>
     </div>
+  </header>
 
-    <h2>Links</h2>
-    <p>
-      <a class="btn" href="https://github.com/GeziP/deepwiki-module-skill">GitHub Repo</a>
-      <a class="btn" href="https://github.com/GeziP/deepwiki-module-skill/blob/main/SKILL.md">SKILL.md</a>
-      <a class="btn" href="https://github.com/GeziP/deepwiki-module-skill/blob/main/README.md">README</a>
-    </p>
-
-    <div class="footer">
-      DeepWiki Module Skill &middot; <a href="https://github.com/GeziP">GeziP</a>
+  <section class="features">
+    <div class="feature-card">
+      <span class="feature-icon">{ }</span>
+      <div class="feature-title">代码语法高亮</div>
+      <div class="feature-desc">C++ / JSON / Bash<br>highlight.js CDN</div>
     </div>
+    <div class="feature-card">
+      <span class="feature-icon">◐</span>
+      <div class="feature-title">深色 / 浅色主题</div>
+      <div class="feature-desc">跟随系统偏好<br>一键切换 + 记忆</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">▦</span>
+      <div class="feature-title">单文件 HTML</div>
+      <div class="feature-desc">零外部依赖<br>可离线浏览 / 分享</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">▾</span>
+      <div class="feature-title">可折叠章节</div>
+      <div class="feature-desc">12 章结构化文档<br>按需展开 / 收起</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">◇</span>
+      <div class="feature-title">内联 SVG 图表</div>
+      <div class="feature-desc">架构 / 状态机 / 流程图<br>点击放大 + 主题适配</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⇄</span>
+      <div class="feature-title">双格式输出</div>
+      <div class="feature-desc">Markdown + HTML<br>ASCII 图 vs SVG 图</div>
+    </div>
+  </section>
+
+  <div class="filter-bar" id="filterBar" style="display:flex;justify-content:center;gap:6px;padding:0 24px;margin-bottom:40px;flex-wrap:wrap;">
+    <button class="filter-btn active" data-filter="all" style="background:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:5px 16px;font-size:13px;color:#fff;cursor:pointer;font-family:var(--font-sans);">全部</button>
+    <button class="filter-btn" data-filter="template" style="background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 16px;font-size:13px;color:var(--text-muted);cursor:pointer;font-family:var(--font-sans);">Templates</button>
+    <button class="filter-btn" data-filter="tool" style="background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 16px;font-size:13px;color:var(--text-muted);cursor:pointer;font-family:var(--font-sans);">Tools</button>
+    <button class="filter-btn" data-filter="validation" style="background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 16px;font-size:13px;color:var(--text-muted);cursor:pointer;font-family:var(--font-sans);">Validation</button>
   </div>
+
+  <main class="container" id="docGrid">
+
+    <div class="group-label" data-group="template">HTML Templates</div>
+    <div class="card-grid" data-group="template">
+      <a class="card" href="template.html" data-group="template" data-keywords="模块 设计 设计文档 module design">
+        <div class="card-name">template.html</div>
+        <div class="card-desc">Main module design document template. 12-chapter structure with collapsible sections, tabs, inline SVG diagrams.</div>
+        <span class="card-tag">HTML</span>
+      </a>
+      <a class="card" href="template-architecture.html" data-group="template" data-keywords="架构 系统 架构设计 architecture system">
+        <div class="card-name">template-architecture.html</div>
+        <div class="card-desc">System architecture template. Multi-module overview, dependency graph, data flow diagrams.</div>
+        <span class="card-tag">HTML</span>
+      </a>
+      <a class="card" href="template-guide.html" data-group="template" data-keywords="指南 使用 使用指南 guide usage quickstart">
+        <div class="card-name">template-guide.html</div>
+        <div class="card-desc">User guide template. Quick start, step-by-step tutorial, code examples with copy button.</div>
+        <span class="card-tag">HTML</span>
+      </a>
+      <a class="card" href="template-report.html" data-group="template" data-keywords="报告 设计报告 report">
+        <div class="card-name">template-report.html</div>
+        <div class="card-desc">Design report template. Decision log, trade-off analysis, changelog timeline.</div>
+        <span class="card-tag">HTML</span>
+      </a>
+      <a class="card" href="template-issue.html" data-group="template" data-keywords="问题 issue bug 报告">
+        <div class="card-name">template-issue.html</div>
+        <div class="card-desc">Issue template. Problem description, root cause analysis, fix timeline, impact assessment.</div>
+        <span class="card-tag">HTML</span>
+      </a>
+      <a class="card" href="template-index.html" data-group="template" data-keywords="索引 首页 index homepage 文档导航">
+        <div class="card-name">template-index.html</div>
+        <div class="card-desc">Index page template. Card grid with search, filter, group labels. Used for doc navigation homepages.</div>
+        <span class="card-tag">HTML</span>
+      </a>
+    </div>
+
+    <div class="group-label" data-group="tool">CLI Tools</div>
+    <div class="card-grid" data-group="tool">
+      <a class="card" href="https://github.com/GeziP/deepwiki-module-skill/blob/main/md-to-html.js" data-group="tool" data-keywords="转换 转换器 converter markdown html">
+        <div class="card-name">md-to-html.js</div>
+        <div class="card-desc">Markdown to HTML converter. Static TOC generation, heading ID assignment, code block language detection, Mermaid block handling.</div>
+        <span class="card-tag">Node.js</span>
+      </a>
+      <a class="card" href="https://github.com/GeziP/deepwiki-module-skill/blob/main/validate-html.js" data-group="tool" data-keywords="校验 验证 validator validate">
+        <div class="card-name">validate-html.js</div>
+        <div class="card-desc">HTML validation pipeline. 9 checks with auto-fix: Mermaid, headings, code blocks, tables, TOC, JS syntax, etc.</div>
+        <span class="card-tag">Node.js</span>
+      </a>
+    </div>
+
+    <div class="group-label" data-group="validation">Validation Checks</div>
+    <div class="card-grid" data-group="validation">
+      <div class="card" data-group="validation" data-keywords="mermaid 图表 流程图">
+        <div class="card-name">1. Mermaid 块</div>
+        <div class="card-desc">HTML entity escaping, arrow syntax, curly brace conflicts, empty blocks. Auto-fix supported.</div>
+        <span class="card-tag">Auto-fix</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="标题 heading id">
+        <div class="card-name">2. 章节标题 ID</div>
+        <div class="card-desc">Missing IDs on h2/h3, duplicate ID detection. Auto-fix generates unique IDs.</div>
+        <span class="card-tag">Auto-fix</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="代码 code block language">
+        <div class="card-name">3. 代码块</div>
+        <div class="card-desc">Language tag presence, unescaped characters, bare pre/code outside figure wrapper.</div>
+        <span class="card-tag">Report</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="表格 table thead">
+        <div class="card-name">4. 表格</div>
+        <div class="card-desc">thead/tbody structure integrity check.</div>
+        <span class="card-tag">Report</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="markdown 内联 link bold">
+        <div class="card-name">5. 内联 Markdown</div>
+        <div class="card-desc">Raw [text](url) links and **bold** patterns not converted to HTML.</div>
+        <span class="card-tag">Report</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="折叠 details summary collapsible">
+        <div class="card-name">6. 可折叠章节</div>
+        <div class="card-desc">details/summary pairing, orphaned open/close tags.</div>
+        <span class="card-tag">Report</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="toc 目录 导航 table of contents">
+        <div class="card-name">7. TOC 完整性</div>
+        <div class="card-desc">Non-empty TOC, all links point to existing heading IDs. Auto-fix supported.</div>
+        <span class="card-tag">Auto-fix</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="html 骨架 doctype charset viewport">
+        <div class="card-name">8. HTML 骨架</div>
+        <div class="card-desc">doctype, charset, viewport meta, lang attribute, title tag, generator meta.</div>
+        <span class="card-tag">Report</span>
+      </div>
+      <div class="card" data-group="validation" data-keywords="javascript js 语法 script">
+        <div class="card-name">9. JavaScript 语法</div>
+        <div class="card-desc">Inline script blocks validated with <code>new Function(js)</code>. Catches syntax errors like missing IIFE closures.</div>
+        <span class="card-tag">Report</span>
+      </div>
+    </div>
+
+    <div class="no-results" id="noResults">No matching items</div>
+  </main>
+
+  <footer>
+    DeepWiki Module Skill &middot; Generated by <a href="https://github.com/GeziP/deepwiki-module-skill">deepwiki-module-skill</a> &middot; <a href="https://github.com/GeziP">GeziP</a>
+  </footer>
+
   <script>
-  (function() {
-    function getTheme() {
-      var s = localStorage.getItem('dws-theme');
-      if (s) return s;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    function apply(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('dws-theme', t); }
-    apply(getTheme());
-    window.toggleTheme = function() { apply(getTheme() === 'dark' ? 'light' : 'dark'); };
-  })();
+    (function() {
+      'use strict';
+
+      var root = document.documentElement;
+      var saved = localStorage.getItem('doc-theme');
+      if (saved) root.setAttribute('data-theme', saved);
+
+      window.toggleTheme = function() {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('doc-theme', next);
+      };
+
+      var noResults = document.getElementById('noResults');
+      var cards = Array.from(document.querySelectorAll('.card'));
+      var groupLabels = document.querySelectorAll('.group-label');
+      var groupGrids = document.querySelectorAll('.card-grid');
+
+      function applyFilters() {
+        var activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+        var visible = 0;
+
+        cards.forEach(function(card) {
+          var match = activeFilter === 'all' || card.dataset.group === activeFilter;
+          card.classList.toggle('hidden', !match);
+          if (match) visible++;
+        });
+
+        groupLabels.forEach(function(el) {
+          var g = el.dataset.group;
+          if (!g) return;
+          var hasVisible = cards.some(function(c) { return c.dataset.group === g && !c.classList.contains('hidden'); });
+          el.style.display = hasVisible ? '' : 'none';
+        });
+        groupGrids.forEach(function(el) {
+          var g = el.dataset.group;
+          if (!g) return;
+          var hasVisible = cards.some(function(c) { return c.dataset.group === g && !c.classList.contains('hidden'); });
+          el.style.display = hasVisible ? '' : 'none';
+        });
+
+        noResults.classList.toggle('show', visible === 0);
+      }
+
+      document.getElementById('filterBar').addEventListener('click', function(e) {
+        var btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        document.querySelector('.filter-btn.active').classList.remove('active');
+        btn.classList.add('active');
+        btn.style.background = 'var(--accent)';
+        btn.style.borderColor = 'var(--accent)';
+        btn.style.color = '#fff';
+        Array.from(document.querySelectorAll('.filter-btn')).forEach(function(b) {
+          if (b !== btn) {
+            b.style.background = 'var(--bg)';
+            b.style.borderColor = 'var(--border)';
+            b.style.color = 'var(--text-muted)';
+          }
+        });
+        applyFilters();
+      });
+    })();
   </script>
 </body>
 </html>
